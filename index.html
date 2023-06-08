@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apple Pay Demo</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    #apple-pay-button {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<button id="apple-pay-button">Apple Pay</button>
+
+<script>
+// Check if Apple Pay is available
+if (window.ApplePaySession) {
+  if (ApplePaySession.canMakePayments()) {
+    $('#apple-pay-button').css('display', 'block');
+  }
+}
+
+// Implement the Apple Pay button click
+$('#apple-pay-button').on('click', function() {
+  var request = {
+    countryCode: 'US',
+    currencyCode: 'USD',
+    supportedNetworks: ['visa', 'masterCard', 'amex', 'discover'],
+    merchantCapabilities: ['supports3DS'],
+    total: {
+      label: 'Your Merchant Name',
+      amount: '10.00'
+    }
+  };
+
+  var session = new ApplePaySession(1, request);
+
+  session.onvalidatemerchant = function(event) {
+    // Call your own server to request a new merchant session
+    var promise = performValidation(event.validationURL);
+    promise.then(function(merchantSession) {
+      session.completeMerchantValidation(merchantSession);
+    });
+  };
+
+  session.onpaymentauthorized = function(event) {
+    // Call your own server to complete the payment
+    var promise = sendPaymentToken(event.payment.token);
+    promise.then(function(success) {
+      if (success) {
+        session.completePayment(ApplePaySession.STATUS_SUCCESS);
+      } else {
+        session.completePayment(ApplePaySession.STATUS_FAILURE);
+      }
+    });
+  };
+
+  session.begin();
+});
+
+// You need to implement these methods to communicate with your server
+function performValidation(url) {
+  // Call your server to request a new merchant session
+}
+
+function sendPaymentToken(paymentToken) {
+  // Call your server to complete the payment
+}
+</script>
+
+</body>
+</html>
