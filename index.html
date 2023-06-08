@@ -36,13 +36,13 @@ $('#apple-pay-button').on('click', function() {
 
   var session = new ApplePaySession(1, request);
 
-  session.onvalidatemerchant = function(event) {
-    // Call your own server to request a new merchant session
-    var promise = performValidation(event.validationURL);
-    // promise.then(function(merchantSession) {
-    //   session.completeMerchantValidation(merchantSession);
-    // });
-  };
+//   session.onvalidatemerchant = function(event) {
+//     // Call your own server to request a new merchant session
+//     var promise = performValidation(event.validationURL);
+//     // promise.then(function(merchantSession) {
+//     //   session.completeMerchantValidation(merchantSession);
+//     // });
+//   };
 
   session.onpaymentauthorized = function(event) {
     // Call your own server to complete the payment
