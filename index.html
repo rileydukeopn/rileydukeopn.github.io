@@ -39,21 +39,21 @@ $('#apple-pay-button').on('click', function() {
   session.onvalidatemerchant = function(event) {
     // Call your own server to request a new merchant session
     var promise = performValidation(event.validationURL);
-    promise.then(function(merchantSession) {
-      session.completeMerchantValidation(merchantSession);
-    });
+    // promise.then(function(merchantSession) {
+    //   session.completeMerchantValidation(merchantSession);
+    // });
   };
 
   session.onpaymentauthorized = function(event) {
     // Call your own server to complete the payment
     var promise = sendPaymentToken(event.payment.token);
-    promise.then(function(success) {
-      if (success) {
-        session.completePayment(ApplePaySession.STATUS_SUCCESS);
-      } else {
-        session.completePayment(ApplePaySession.STATUS_FAILURE);
-      }
-    });
+    // promise.then(function(success) {
+    //   if (success) {
+    //     session.completePayment(ApplePaySession.STATUS_SUCCESS);
+    //   } else {
+    //     session.completePayment(ApplePaySession.STATUS_FAILURE);
+    //   }
+    // });
   };
 
   session.begin();
